@@ -1,0 +1,659 @@
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/components/JobDescription.jsx b/Client/src/components/JobDescription.jsx
+--- a/Client/src/components/JobDescription.jsx	2026-10-23 07:03:47.000000000 +0000
++++ b/Client/src/components/JobDescription.jsx	2026-10-28 22:27:49.070750779 +0000
+@@ -39,7 +39,7 @@
+ 
+     } catch (error) {
+       console.log(error);
+-      toast.error(error.response.data.message);
++      toast.error(error.response?.data?.message);
+     }
+   }
+ 
+@@ -97,7 +97,7 @@
+           <h1 className='font-bold my-1'>Role: <span className='pl-4 font-normal text-gray-800'>{singleJob?.title}</span></h1>
+           <h1 className='font-bold my-1'>Location: <span className='pl-4 font-normal text-gray-800'>{singleJob?.location}</span></h1>
+           <h1 className='font-bold my-1'>Description: <span className='pl-4 font-normal text-gray-800'> {singleJob?.description} </span></h1>
+-          <h1 className='font-bold my-1'>Experience: <span className='pl-4 font-normal text-gray-800'>{singleJob?.experience} yrs</span></h1>
++          <h1 className='font-bold my-1'>Experience: <span className='pl-4 font-normal text-gray-800'>{singleJob?.experienceLevel} yrs</span></h1>
+           <h1 className='font-bold my-1'>Salary: <span className='pl-4 font-normal text-gray-800'>{singleJob?.salary} LPA</span></h1>
+           <h1 className='font-bold my-1'>Total Applicaants: <span className='pl-4 font-normal text-gray-800'>{singleJob?.applications?.length}</span></h1>
+           <h1 className='font-bold my-1'>Posted Date: <span className='pl-4 font-normal text-gray-800'>{singleJob?.createdAt.split("T")[0]}</span></h1>
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/components/Jobs.jsx b/Client/src/components/Jobs.jsx
+--- a/Client/src/components/Jobs.jsx	2026-10-23 07:03:47.000000000 +0000
++++ b/Client/src/components/Jobs.jsx	2026-10-28 22:27:49.069134939 +0000
+@@ -14,6 +14,15 @@
+ import { Link } from 'react-router-dom'
+ 
+ 
++// salary filter values look like "6-10 LPA" or "100+"
++const matchesSalary = (salary, query) => {
++    const range = query.match(/^(\d+)\s*-\s*(\d+)\s*LPA$/i);
++    if (range) return salary >= Number(range[1]) && salary <= Number(range[2]);
++    const min = query.match(/^(\d+)\s*\+$/);
++    if (min) return salary >= Number(min[1]);
++    return false;
++}
++
+ // const jobs = [
+ //     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+ // ]
+@@ -41,7 +50,8 @@
+             const filteredJob = allJobs.filter((job) => {
+                 return job?.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+                     job?.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+-                    job?.location.toLowerCase().includes(searchedQuery.toLowerCase())
++                    job?.location.toLowerCase().includes(searchedQuery.toLowerCase()) ||
++                    matchesSalary(job?.salary, searchedQuery)
+                 // job?.company.toLowerCase().includes(searchedQuery.toLowerCase())
+             })
+             setFilterJobs(filteredJob)
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/components/UpdateProfileDialog.jsx b/Client/src/components/UpdateProfileDialog.jsx
+--- a/Client/src/components/UpdateProfileDialog.jsx	2026-10-23 07:03:47.000000000 +0000
++++ b/Client/src/components/UpdateProfileDialog.jsx	2026-10-28 22:27:49.071042062 +0000
+@@ -65,7 +65,7 @@
+ 
+         } catch (error) {
+             console.log(error);
+-            toast.error(error.response.data.message);
++            toast.error(error.response?.data?.message);
+         } finally {
+             setLoading(false);
+ 
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/components/admin/CompanyCreate.jsx b/Client/src/components/admin/CompanyCreate.jsx
+--- a/Client/src/components/admin/CompanyCreate.jsx	2026-10-23 07:03:47.000000000 +0000
++++ b/Client/src/components/admin/CompanyCreate.jsx	2026-10-28 22:27:49.071280025 +0000
+@@ -36,7 +36,7 @@
+ 
+         } catch (error) {
+             console.log(error);
+-            toast.error(error.response.data.message);
++            toast.error(error.response?.data?.message);
+         }
+     }
+ 
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/components/admin/CompanySetup.jsx b/Client/src/components/admin/CompanySetup.jsx
+--- a/Client/src/components/admin/CompanySetup.jsx	2026-10-23 07:03:47.000000000 +0000
++++ b/Client/src/components/admin/CompanySetup.jsx	2026-10-28 22:27:49.071487473 +0000
+@@ -76,7 +76,7 @@
+ 
+         } catch (error) {
+             console.log(error)
+-            toast.error(error.response.data.message);
++            toast.error(error.response?.data?.message);
+         } finally {
+             setLoading(false)
+         }
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/components/admin/JobApplicantsTable.jsx b/Client/src/components/admin/JobApplicantsTable.jsx
+--- a/Client/src/components/admin/JobApplicantsTable.jsx	2026-10-23 07:03:47.000000000 +0000
++++ b/Client/src/components/admin/JobApplicantsTable.jsx	2026-10-28 22:27:49.071692104 +0000
+@@ -30,7 +30,7 @@
+ 
+         } catch (error) {
+             console.log(error);
+-            toast.error(error.response.data.message);
++            toast.error(error.response?.data?.message);
+         }
+     }
+ 
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/components/admin/PostJob.jsx b/Client/src/components/admin/PostJob.jsx
+--- a/Client/src/components/admin/PostJob.jsx	2026-10-23 07:03:47.000000000 +0000
++++ b/Client/src/components/admin/PostJob.jsx	2026-10-28 22:27:49.071876898 +0000
+@@ -10,12 +10,14 @@
+ import { JOB_API_END_POINT } from '@/utils/constant'
+ import { toast } from 'sonner'
+ import { Loader2 } from 'lucide-react'
++import useGetAllCompanies from '@/hooks/useGetAllCompanies'
+ 
+ 
+ 
+ 
+ const PostJob = () => {
+ 
++    useGetAllCompanies();
+     const { companies } = useSelector(store => store.company)
+     const navigate = useNavigate();
+     const dispatch = useDispatch();
+@@ -61,7 +63,7 @@
+             }
+         } catch (error) {
+             console.log(error)
+-            toast.error(error.response.data.message)
++            toast.error(error.response?.data?.message)
+         } finally {
+             setLoading(false);
+         }
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/components/auth/Login.jsx b/Client/src/components/auth/Login.jsx
+--- a/Client/src/components/auth/Login.jsx	2026-10-23 07:03:47.000000000 +0000
++++ b/Client/src/components/auth/Login.jsx	2026-10-28 22:27:49.072072359 +0000
+@@ -48,7 +48,7 @@
+ 
+     } catch (error) {
+       console.log(error.message);
+-      toast.error(error.response.data.message)
++      toast.error(error.response?.data?.message)
+     } finally {
+       dispatch(setLoading(false));
+     }
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/components/auth/Signup.jsx b/Client/src/components/auth/Signup.jsx
+--- a/Client/src/components/auth/Signup.jsx	2026-10-23 07:03:47.000000000 +0000
++++ b/Client/src/components/auth/Signup.jsx	2026-10-28 22:27:49.072247703 +0000
+@@ -69,7 +69,7 @@
+ 
+     } catch (error) {
+       console.log(error.message);
+-      toast.error(error.response.data.message)
++      toast.error(error.response?.data?.message)
+     } finally {
+       dispatch(setLoading(false));
+     }
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/components/shared/Navbar.jsx b/Client/src/components/shared/Navbar.jsx
+--- a/Client/src/components/shared/Navbar.jsx	2026-10-23 07:03:47.000000000 +0000
++++ b/Client/src/components/shared/Navbar.jsx	2026-10-28 22:27:49.072489942 +0000
+@@ -21,7 +21,7 @@
+ 
+     const logoutHandler = async () => {
+         try {
+-            const response = await axios.post(`${USER_API_END_POINT}/logout`, {
++            const response = await axios.post(`${USER_API_END_POINT}/logout`, {}, {
+                 withCredentials: true
+             })
+             if (response.data.success) {
+@@ -32,7 +32,7 @@
+ 
+         } catch (error) {
+             console.log(error);
+-            toast.error(error.response.data.message);
++            toast.error(error.response?.data?.message);
+         }
+     }
+ 
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Client/src/main.jsx b/Client/src/main.jsx
+--- a/Client/src/main.jsx	2026-10-23 07:03:46.000000000 +0000
++++ b/Client/src/main.jsx	2026-10-28 22:27:49.068746163 +0000
+@@ -7,9 +7,22 @@
+ import store from './redux/store'
+ import { persistStore } from 'redux-persist'
+ import { PersistGate } from 'redux-persist/integration/react'
++import axios from 'axios'
++import { setUser } from './redux/authSlice'
+ 
+ const persistor = persistStore(store)
+ 
++// if the login cookie is missing or expired, the server replies 401 -> log the user out in the UI too
++axios.interceptors.response.use(
++  (response) => response,
++  (error) => {
++    if (error.response?.status === 401) {
++      store.dispatch(setUser(null))
++    }
++    return Promise.reject(error)
++  }
++)
++
+ createRoot(document.getElementById('root')).render(
+   <StrictMode>
+     <Provider store={store}>
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Server/controllers/application.controllers.js b/Server/controllers/application.controllers.js
+--- a/Server/controllers/application.controllers.js	2026-10-26 21:41:16.000000000 +0000
++++ b/Server/controllers/application.controllers.js	2026-10-28 22:27:49.065221268 +0000
+@@ -50,6 +50,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -85,6 +89,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -101,6 +109,7 @@
+             options: { sort: { createdAt: -1 } },
+             populate: {
+                 path: "applicant",
++                select: "-password",
+             }
+         })
+         if (!job) {
+@@ -110,6 +119,13 @@
+             })
+         }
+ 
++        if (job.created_by.toString() !== req.id) {
++            return res.status(403).json({
++                message: "You can only view applicants of your own jobs",
++                success: false,
++            })
++        }
++
+         return res.status(200).json({
+             job,
+             success: true,
+@@ -117,6 +133,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -133,7 +153,29 @@
+             })
+         }
+ 
+-        const application = await Application.findByIdAndUpdate(applicationId, { status: status.toLowerCase()  });
++        const normalizedStatus = status.toLowerCase();
++        if (!["pending", "accepted", "rejected"].includes(normalizedStatus)) {
++            return res.status(400).json({
++                message: "Invalid status",
++                success: false,
++            })
++        }
++
++        const existingApplication = await Application.findById(applicationId).populate("job");
++        if (!existingApplication) {
++            return res.status(404).json({
++                message: "Application not found",
++                success: false,
++            })
++        }
++        if (existingApplication.job?.created_by?.toString() !== req.id) {
++            return res.status(403).json({
++                message: "You can only update applications for your own jobs",
++                success: false,
++            })
++        }
++
++        const application = await Application.findByIdAndUpdate(applicationId, { status: normalizedStatus });
+         return res.status(200).json({
+             message: "Status updated successfully",
+ 
+@@ -142,6 +184,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Server/controllers/company.controllers.js b/Server/controllers/company.controllers.js
+--- a/Server/controllers/company.controllers.js	2026-10-23 07:03:47.000000000 +0000
++++ b/Server/controllers/company.controllers.js	2026-10-28 22:27:49.064037586 +0000
+@@ -63,6 +63,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -80,6 +84,13 @@
+             })
+         }
+ 
++        if (company.userId.toString() !== req.id) {
++            return res.status(403).json({
++                message: "You can only view your own company",
++                success: false,
++            })
++        }
++
+         return res.status(200).json({
+             company,
+             success: true,
+@@ -87,6 +98,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -97,6 +112,20 @@
+         const { companyName, description, website, location } = req.body;
+         const file = req.file;
+ 
++        const existingCompany = await Company.findById(req.params.id);
++        if (!existingCompany) {
++            return res.status(404).json({
++                message: "Company not found",
++                success: false,
++            })
++        }
++        if (existingCompany.userId.toString() !== req.id) {
++            return res.status(403).json({
++                message: "You can only update your own company",
++                success: false,
++            })
++        }
++
+         // cloudinary
+         let logo = null;
+ 
+@@ -107,8 +136,10 @@
+         }
+ 
+         const updateData = {
+-            companyName, description, website, location, logo
++            companyName, description, website, location
+         }
++        // keep the existing logo unless a new one was uploaded
++        if (logo) updateData.logo = logo;
+ 
+         const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
+         if (!company) {
+@@ -126,6 +157,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Server/controllers/job.controllers.js b/Server/controllers/job.controllers.js
+--- a/Server/controllers/job.controllers.js	2026-10-26 21:43:02.000000000 +0000
++++ b/Server/controllers/job.controllers.js	2026-10-28 22:27:49.064707475 +0000
+@@ -1,4 +1,5 @@
+ import { Job } from "../models/job.models.js";
++import { Company } from "../models/company.models.js";
+ 
+ 
+ // role === "recruiter"
+@@ -16,6 +17,14 @@
+             })
+         }
+ 
++        const company = await Company.findOne({ _id: companyId, userId: userId });
++        if (!company) {
++            return res.status(403).json({
++                message: "You can only post jobs for your own company",
++                success: false,
++            })
++        }
++
+         const job = await Job.create({
+             title,
+             description,
+@@ -37,6 +46,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -46,14 +59,22 @@
+ export const getAllJobs = async (req, res) => {
+     try {
+         const keyword = req.query.keyword || "";
++        const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+         const query = {
+             $or: [
+-                { title: { $regex: keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), $options: "i" } },
++                { title: { $regex: safeKeyword, $options: "i" } },
+                 
+-                { description: { $regex: keyword, $options: "i" } },
++                { description: { $regex: safeKeyword, $options: "i" } },
++                { location: { $regex: safeKeyword, $options: "i" } },
+             ]
+         };
+ 
++        // salary filter values look like "6-10 LPA" or "100+"
++        const salaryRange = keyword.match(/^(\d+)\s*-\s*(\d+)\s*LPA$/i);
++        const salaryMin = keyword.match(/^(\d+)\s*\+$/);
++        if (salaryRange) query.$or.push({ salary: { $gte: Number(salaryRange[1]), $lte: Number(salaryRange[2]) } });
++        if (salaryMin) query.$or.push({ salary: { $gte: Number(salaryMin[1]) } });
++
+         const jobs = await Job.find(query).populate({
+             path: "company"
+         }).sort({ createdAt: -1 });
+@@ -76,6 +97,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -106,6 +131,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -137,6 +166,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Server/controllers/user.controllers.js b/Server/controllers/user.controllers.js
+--- a/Server/controllers/user.controllers.js	2026-10-23 07:03:47.000000000 +0000
++++ b/Server/controllers/user.controllers.js	2026-10-28 22:27:49.063278221 +0000
+@@ -52,7 +52,11 @@
+         })
+ 
+     } catch (error) {
+-        console.log(error)
++        console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -117,6 +121,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -124,7 +132,7 @@
+ export const logout = async (req, res) => {
+     try {
+ 
+-        return res.status(200).cookie("token", "", { maxAge: 0 })
++        return res.status(200).cookie("token", "", { maxAge: 0, httpOnly: true, sameSite: 'none', secure: true })
+             .json({
+                 message: "Logged out successfully",
+                 success: true,
+@@ -132,6 +140,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+@@ -170,6 +182,15 @@
+ 
+ 
+         if (fullname) user.fullname = fullname
++        if (email && email !== user.email) {
++            const emailTaken = await User.findOne({ email: email });
++            if (emailTaken) {
++                return res.status(400).json({
++                    message: "Email already in use",
++                    success: false,
++                })
++            }
++        }
+         if (email) user.email = email
+         if (phoneNumber) user.phoneNumber = phoneNumber
+         if (bio) user.profile.bio = bio
+@@ -203,6 +224,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
+     }
+ }
+ 
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Server/index.js b/Server/index.js
+--- a/Server/index.js	2026-10-23 07:03:47.000000000 +0000
++++ b/Server/index.js	2026-10-28 22:27:49.060160836 +0000
+@@ -40,3 +40,5 @@
+     
+     console.log(`Server running at port ${PORT}`);
+ })
++
++export default app;
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Server/middlewares/authUser.js b/Server/middlewares/authUser.js
+--- a/Server/middlewares/authUser.js	2026-10-23 07:03:47.000000000 +0000
++++ b/Server/middlewares/authUser.js	2026-10-28 22:27:49.060895487 +0000
+@@ -28,6 +28,10 @@
+ 
+     } catch (error) {
+         console.log(error);
++        return res.status(401).json({
++            message: "Invalid or expired token",
++            success: false,
++        })
+     }
+ }
+ 
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Server/middlewares/isRecruiter.js b/Server/middlewares/isRecruiter.js
+--- a/Server/middlewares/isRecruiter.js	1970-01-01 00:00:00.000000000 +0000
++++ b/Server/middlewares/isRecruiter.js	2026-10-28 22:27:49.065380315 +0000
+@@ -0,0 +1,23 @@
++import { User } from "../models/user.model.js";
++
++// use after authUser: allows the request only if the logged-in user is a recruiter
++const isRecruiter = async (req, res, next) => {
++    try {
++        const user = await User.findById(req.id).select("role");
++        if (!user || user.role !== "recruiter") {
++            return res.status(403).json({
++                message: "Only recruiters can do this",
++                success: false,
++            })
++        }
++        next();
++    } catch (error) {
++        console.log(error);
++        return res.status(500).json({
++            message: error.message,
++            success: false,
++        });
++    }
++}
++
++export default isRecruiter;
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Server/routes/application.routes.js b/Server/routes/application.routes.js
+--- a/Server/routes/application.routes.js	2026-10-23 07:03:47.000000000 +0000
++++ b/Server/routes/application.routes.js	2026-10-28 22:27:49.067874445 +0000
+@@ -1,13 +1,14 @@
+ import express from "express";
+ import { applyJob, getApplicants, getAppliedJobs, updateStatus } from "../controllers/application.controllers.js";
+ import authUser from "../middlewares/authUser.js";
++import isRecruiter from "../middlewares/isRecruiter.js";
+ 
+ const applicantionRouter = express.Router()
+ 
+ applicantionRouter.post("/apply/:id", authUser, applyJob);
+ applicantionRouter.get("/get", authUser, getAppliedJobs);
+-applicantionRouter.get("/:id/applicants", authUser, getApplicants);
+-applicantionRouter.post("/status/:id/update", authUser, updateStatus);
++applicantionRouter.get("/:id/applicants", authUser, isRecruiter, getApplicants);
++applicantionRouter.post("/status/:id/update", authUser, isRecruiter, updateStatus);
+ 
+ 
+ export default applicantionRouter;
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Server/routes/company.routes.js b/Server/routes/company.routes.js
+--- a/Server/routes/company.routes.js	2026-10-23 07:03:47.000000000 +0000
++++ b/Server/routes/company.routes.js	2026-10-28 22:27:49.066211417 +0000
+@@ -1,14 +1,15 @@
+ import express from "express";
+ import { getCompanyDetailsById, getCompanyDetailsByUser, registerCompany, updateCompany } from "../controllers/company.controllers.js";
+ import authUser from "../middlewares/authUser.js";
++import isRecruiter from "../middlewares/isRecruiter.js";
+ import { singleUpload } from "../middlewares/multer.js";
+ 
+ const companyRouter = express.Router()
+ 
+-companyRouter.post("/register", authUser, registerCompany);
+-companyRouter.get("/get", authUser, getCompanyDetailsByUser);
+-companyRouter.get("/get/:id", authUser, getCompanyDetailsById);
+-companyRouter.post("/update/:id", authUser, singleUpload, updateCompany);
++companyRouter.post("/register", authUser, isRecruiter, registerCompany);
++companyRouter.get("/get", authUser, isRecruiter, getCompanyDetailsByUser);
++companyRouter.get("/get/:id", authUser, isRecruiter, getCompanyDetailsById);
++companyRouter.post("/update/:id", authUser, isRecruiter, singleUpload, updateCompany);
+ 
+ 
+ export default companyRouter;
+diff -ruN '--exclude=node_modules' '--exclude=CHANGES.md' '--exclude=FIXES.diff' a/Server/routes/job.routes.js b/Server/routes/job.routes.js
+--- a/Server/routes/job.routes.js	2026-10-23 07:03:47.000000000 +0000
++++ b/Server/routes/job.routes.js	2026-10-28 22:27:49.066824715 +0000
+@@ -1,13 +1,14 @@
+ import express from 'express';
+ import { getAllJobs, getJobById, getRecruiterJobs, postJob } from '../controllers/job.controllers.js';
+ import authUser from '../middlewares/authUser.js';
++import isRecruiter from '../middlewares/isRecruiter.js';
+ 
+ const jobRouter = express.Router()
+ 
+ 
+-jobRouter.post("/post", authUser, postJob);
++jobRouter.post("/post", authUser, isRecruiter, postJob);
+ jobRouter.get("/get", getAllJobs);
+-jobRouter.get("/get-recruiter-job", authUser, getRecruiterJobs);
++jobRouter.get("/get-recruiter-job", authUser, isRecruiter, getRecruiterJobs);
+ jobRouter.get("/get/:id", getJobById);
+ 
+ 
