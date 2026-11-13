@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, ChevronDown } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import ServiceList from './ServiceList'
-import PromoOffer from './PromoOffer'
 import { serviceGroups } from '@/data/services'
 import { cn } from '@/lib/utils'
 
@@ -27,7 +26,6 @@ const ServicesMenu = () => {
                             <div key={group.title} className={cn('p-6', index > 0 && 'border-l border-border')}>
                                 <h3 className='mb-3 text-base font-semibold'>{group.title}</h3>
                                 <ServiceList items={group.items} onNavigate={close} />
-                                {index === serviceGroups.length - 1 && <PromoOffer />}
                             </div>
                         ))
                     }

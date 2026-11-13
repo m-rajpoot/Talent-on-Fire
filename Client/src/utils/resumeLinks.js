@@ -1,3 +1,5 @@
+import { SITE_NAME } from '@/data/siteConfig'
+
 // Turns any resume link (Google Drive, Cloudinary or a local /public file)
 // into the 3 URLs the Resume Samples page needs.
 //
@@ -65,7 +67,7 @@ export const getResumeLinks = (rawUrl = '') => {
 
     // local file in /public (e.g. /resumes/sample.pdf) or any other direct PDF link
     return {
-        source: url.startsWith('/') ? 'Hire The Fire' : 'Web',
+        source: url.startsWith('/') ? SITE_NAME : 'Web',
         previewUrl: url,
         openUrl: url,
         downloadUrl: url,

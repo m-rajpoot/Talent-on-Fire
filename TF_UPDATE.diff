@@ -1,0 +1,829 @@
+diff -ruN old/Client/index.html new/Client/index.html
+--- old/Client/index.html	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/index.html	2026-11-13 20:55:31.000000000 +0000
+@@ -2,14 +2,18 @@
+ <html lang="en">
+   <head>
+     <meta charset="UTF-8" />
+-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
++    <!-- browser-tab icon: put your logo at public/logo.png (see README "Adding your logo") -->
++    <link rel="icon" type="image/png" href="/logo.png" />
++    <link rel="apple-touch-icon" href="/logo.png" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-    <title>Hire The Fire</title>
++    <meta name="description" content="Talent on Fire (TF) - search, apply and get your dream job. Free resume samples and career services." />
++    <meta name="theme-color" content="#6A38C2" />
++    <title>Talent on Fire</title>
+     <script>
+       // apply saved theme before React loads (prevents a white flash). Key must match src/context/themeContext.js
+       (function () {
+         try {
+-          var t = localStorage.getItem('hire-the-fire-theme');
++          var t = localStorage.getItem('talent-on-fire-theme');
+           if (t !== 'light') {
+             document.documentElement.classList.add('dark');
+             document.documentElement.style.colorScheme = 'dark';
+diff -ruN old/Client/public/vite.svg new/Client/public/vite.svg
+--- old/Client/public/vite.svg	2026-10-29 23:45:08.000000000 +0000
++++ new/Client/public/vite.svg	1970-01-01 00:00:00.000000000 +0000
+@@ -1 +0,0 @@
+-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="31.88" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 257"><defs><linearGradient id="IconifyId1813088fe1fbc01fb466" x1="-.828%" x2="57.636%" y1="7.652%" y2="78.411%"><stop offset="0%" stop-color="#41D1FF"></stop><stop offset="100%" stop-color="#BD34FE"></stop></linearGradient><linearGradient id="IconifyId1813088fe1fbc01fb467" x1="43.376%" x2="50.316%" y1="2.242%" y2="89.03%"><stop offset="0%" stop-color="#FFEA83"></stop><stop offset="8.333%" stop-color="#FFDD35"></stop><stop offset="100%" stop-color="#FFA800"></stop></linearGradient></defs><path fill="url(#IconifyId1813088fe1fbc01fb466)" d="M255.153 37.938L134.897 252.976c-2.483 4.44-8.862 4.466-11.382.048L.875 37.958c-2.746-4.814 1.371-10.646 6.827-9.67l120.385 21.517a6.537 6.537 0 0 0 2.322-.004l117.867-21.483c5.438-.991 9.574 4.796 6.877 9.62Z"></path><path fill="url(#IconifyId1813088fe1fbc01fb467)" d="M185.432.063L96.44 17.501a3.268 3.268 0 0 0-2.634 3.014l-5.474 92.456a3.268 3.268 0 0 0 3.997 3.378l24.777-5.718c2.318-.535 4.413 1.507 3.936 3.838l-7.361 36.047c-.495 2.426 1.782 4.5 4.151 3.78l15.304-4.649c2.372-.72 4.652 1.36 4.15 3.788l-11.698 56.621c-.732 3.542 3.979 5.473 5.943 2.437l1.313-2.028l72.516-144.72c1.215-2.423-.88-5.186-3.54-4.672l-25.505 4.922c-2.396.462-4.435-1.77-3.759-4.114l16.646-57.705c.677-2.35-1.37-4.583-3.769-4.113Z"></path></svg>
+\ No newline at end of file
+diff -ruN old/Client/src/components/CategoryCarousel.jsx new/Client/src/components/CategoryCarousel.jsx
+--- old/Client/src/components/CategoryCarousel.jsx	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/components/CategoryCarousel.jsx	2026-11-13 20:56:45.000000000 +0000
+@@ -1,4 +1,4 @@
+-import React, { useState } from 'react'
++import React from 'react'
+ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './ui/carousel'
+ import { Button } from './ui/button'
+ import { useDispatch } from 'react-redux'
+@@ -14,7 +14,7 @@
+     "Graphic Designer",
+     "Full Stack Developer",
+     "DevOps Engineer",
+-    "Cyber Security ",
++    "Cyber Security",
+ ]
+ 
+ function CategoryCarousel() {
+@@ -36,12 +36,16 @@
+         whileInView={{ opacity: 1, y: 0 }}
+         viewport={{}}
+         >
+-            <Carousel className="w-full max-sm:max-w-[234px] sm:max-w-xl mx-auto my-10">
+-                <CarouselContent>
++            {/* each pill is as wide as its text (basis-auto), so long names never overlap the next pill */}
++            <Carousel
++                opts={{ align: "start" }}
++                className="w-full max-sm:max-w-[calc(100%-7rem)] sm:max-w-xl md:max-w-2xl mx-auto my-10"
++            >
++                <CarouselContent fade className="py-1">
+                     {
+-                        category.map((cat, index) => (
+-                            <CarouselItem key={index} className="basis-[60%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 ">
+-                                <Button onClick={() => searchJobHandler(cat)} variant="outline" className="rounded-full cursor-pointer hover:scale-105 duration-600 transition-all">
++                        category.map((cat) => (
++                            <CarouselItem key={cat} className="basis-auto">
++                                <Button onClick={() => searchJobHandler(cat.trim())} variant="outline" className="rounded-full whitespace-nowrap cursor-pointer hover:scale-105 duration-300 transition-all">
+                                     {cat}
+                                 </Button>
+                             </CarouselItem>
+diff -ruN old/Client/src/components/FilterCard.jsx new/Client/src/components/FilterCard.jsx
+--- old/Client/src/components/FilterCard.jsx	2026-11-07 19:58:38.000000000 +0000
++++ new/Client/src/components/FilterCard.jsx	2026-11-13 20:56:08.000000000 +0000
+@@ -1,76 +1,58 @@
+-import React, { useEffect, useState } from 'react'
++import React, { useId } from 'react'
+ import { RadioGroup, RadioGroupItem } from './ui/radio-group'
+ import { Label } from './ui/label'
+-import { useDispatch } from 'react-redux'
+-import { setSearchedQuery } from '@/redux/jobSlice'
+-import useGetAllJobs from '@/hooks/useGetAllJobs'
++import { ALL, DEFAULT_FILTERS, filterGroups, hasActiveFilters } from '@/utils/jobFilters'
+ 
+-// location
+-// salary
+-// job types
+-
+-const filterData = [
+-    {
+-        filterType: "Location",
+-        array: ["Delhi NCR", "Bengluru", "Mumbai", "Hyderabad", "Ranchi", "Siwan"]
+-    },
+-    {
+-        filterType: "Salary",
+-        array: ["2-6 LPA" , "7-10 LPA", "11-40 LPA", "41-100 LPA" ,"100+"]
+-    },
+-    {
+-        filterType: "Industry",
+-        array: ["Frontend Developer", "Backend Developer", "Full Stack Developer", "Data Scientist", "Machine Learning", "DevOps Engineer", "Mobile App Developer", "UI/UX Designer", "Product Manager", "Quality Assurance Engineer" , "Cybersecurity Analyst", "Cloud Engineer", "Business Analyst", "Database Administrator", "Network Engineer", "Game Developer", "Embedded Systems Engineer", "Robotics Engineer", "Blockchain Developer", "AI Researcher"]
+-    }
+-    
+-]
+-
+-
+-const FilterCard = () => {
+-    useGetAllJobs()
+-
+-    const [selectedValue, setSelectedValue] = useState("");
+-    const dispatch = useDispatch();
+-
+-    const changeHandler = (value) => {
+-        setSelectedValue(value);
+-    }
+-
+-
+-    useEffect(() => {
+-        
+-        dispatch(setSearchedQuery(selectedValue))
+-    }, [selectedValue])
++// Filters for the Jobs page: location, salary, industry.
++// Every group has an "All" option (selected by default). The selected values live in Jobs.jsx,
++// so the desktop sidebar and the mobile "Filter" panel always show the same selection.
++const FilterCard = ({ filters = DEFAULT_FILTERS, onChange, onClear }) => {
++    // unique ids per FilterCard instance (Jobs renders one for desktop and one for mobile)
++    const idPrefix = useId()
+ 
+     return (
+         <div className='w-full bg-white dark:bg-transparent py-3 rounded-md'>
+-            <h1 className='font-bold text-lg'>Filter Jobs</h1>
++            <div className='flex items-center justify-between gap-2'>
++                <h1 className='font-bold text-lg'>Filter Jobs</h1>
++                {
++                    hasActiveFilters(filters) && (
++                        <button
++                            type='button'
++                            onClick={onClear}
++                            className='text-sm font-medium text-[#6A38C2] hover:underline dark:text-[#a78bfa] cursor-pointer'
++                        >
++                            Clear all
++                        </button>
++                    )
++                }
++            </div>
+             <hr className='mt-3' />
+ 
+-            <RadioGroup value={selectedValue} onValueChange={changeHandler}>
+-                {
+-                    filterData.map((data, index) => (
+-                        <div key={index}>
+-                            <h1 className='font-bold text-lg'>{data.filterType}</h1>
++            {
++                filterGroups.map((group) => (
++                    <div key={group.key} className='mt-3'>
++                        <h1 className='font-bold text-lg'>{group.title}</h1>
++                        <RadioGroup
++                            value={filters[group.key] ?? ALL}
++                            onValueChange={(value) => onChange?.(group.key, value)}
++                            aria-label={group.title}
++                            className='gap-0'
++                        >
+                             {
+-                                data.array.map((item, idx) => {
+-                                    const itemId = `r${index - idx}`
++                                [ALL, ...group.options].map((option, idx) => {
++                                    const itemId = `${idPrefix}-${group.key}-${idx}`
+                                     return (
+-                                        <div className='flex items-center spac-x-2 gap-1 my-2' key={idx}>
+-                                            <RadioGroupItem value={item} id={itemId} />
+-                                            <Label className="text-base/5" htmlFor={itemId}>{item}</Label>
++                                        <div className='flex items-center gap-1 my-2' key={option}>
++                                            <RadioGroupItem value={option} id={itemId} />
++                                            <Label className='text-base/5 cursor-pointer' htmlFor={itemId}>{option}</Label>
+                                         </div>
+                                     )
+-
+                                 })
+                             }
+-                        </div>
+-                    ))
+-                }
+-            </RadioGroup>
+-
+-
+-
++                        </RadioGroup>
++                    </div>
++                ))
++            }
+         </div>
+     )
+ }
+diff -ruN old/Client/src/components/Jobs.jsx new/Client/src/components/Jobs.jsx
+--- old/Client/src/components/Jobs.jsx	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/components/Jobs.jsx	2026-11-13 20:56:26.000000000 +0000
+@@ -12,16 +12,9 @@
+ import { Avatar, AvatarImage } from './ui/avatar'
+ import { LogOut, User2 } from 'lucide-react'
+ import { Link } from 'react-router-dom'
++import { applyJobFilters, DEFAULT_FILTERS, hasActiveFilters, matchesSalary } from '@/utils/jobFilters'
+ 
+ 
+-// salary filter values look like "6-10 LPA" or "100+"
+-const matchesSalary = (salary, query) => {
+-    const range = query.match(/^(\d+)\s*-\s*(\d+)\s*LPA$/i);
+-    if (range) return salary >= Number(range[1]) && salary <= Number(range[2]);
+-    const min = query.match(/^(\d+)\s*\+$/);
+-    if (min) return salary >= Number(min[1]);
+-    return false;
+-}
+ 
+ // const jobs = [
+ //     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+@@ -41,29 +34,39 @@
+ 
+     const [isFilterBoxOpen, setIsFilterBoxOpen] = useState(false);
+ 
++    // selected filters: { location, salary, industry } - each one is "All" by default
++    const [filters, setFilters] = useState(DEFAULT_FILTERS);
++    const changeFilter = (key, value) => setFilters((prev) => ({ ...prev, [key]: value }));
++    const clearFilters = () => setFilters(DEFAULT_FILTERS);
++
+ 
+ 
+ 
+     useEffect(() => {
+ 
++        let jobs = allJobs;
++
+         if (searchedQuery) {
+-            const filteredJob = allJobs.filter((job) => {
+-                return job?.title.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+-                    job?.description.toLowerCase().includes(searchedQuery.toLowerCase()) ||
+-                    job?.location.toLowerCase().includes(searchedQuery.toLowerCase()) ||
++            const query = searchedQuery.toLowerCase();
++            jobs = jobs.filter((job) => {
++                return job?.title?.toLowerCase().includes(query) ||
++                    job?.description?.toLowerCase().includes(query) ||
++                    job?.location?.toLowerCase().includes(query) ||
+                     matchesSalary(job?.salary, searchedQuery)
+                 // job?.company.toLowerCase().includes(searchedQuery.toLowerCase())
+             })
+-            setFilterJobs(filteredJob)
+-            // dispatch(setSearchedQuery(""));
++        }
+ 
++        // location + salary + industry filters ("All" = no filter for that group)
++        setFilterJobs(applyJobFilters(jobs, filters))
++
++    }, [allJobs, searchedQuery, filters])
+ 
+-        }
+-        else {
+-            setFilterJobs(allJobs)
+-        }
+ 
+-    }, [allJobs, searchedQuery])
++    // open the Jobs page with every job listed (a search typed elsewhere shouldn't hide jobs here)
++    useEffect(() => {
++        dispatch(setSearchedQuery(""));
++    }, [dispatch])
+ 
+ 
+     useEffect(() => {
+@@ -80,7 +83,7 @@
+             <div className='sm:px-[5%] max-sm:px-5 lg:px-[8%] mt-5'>
+                 <div className=' sm:flex gap-5 mx-0 px-0 '>
+                     <div className='sm:min-w-[169px] max-sm:hidden'>
+-                        <FilterCard />
++                        <FilterCard filters={filters} onChange={changeFilter} onClear={clearFilters} />
+ 
+                     </div>
+ 
+@@ -98,7 +101,7 @@
+                             {
+                                 isFilterBoxOpen &&
+                                 <>
+-                                    <FilterCard />
++                                    <FilterCard filters={filters} onChange={changeFilter} onClear={clearFilters} />
+                                     <hr />
+                                 </>
+ 
+@@ -111,8 +114,16 @@
+ 
+                     <div className="w-full">
+                         {
+-                            filterJobs.length <= 0 ? <span>No Jobs Found</span> :
+-                                <div className=' h-[95vh] overflow-y-auto pb-5'>
++                            filterJobs.length <= 0 ? (
++                                <div className='flex flex-col items-start gap-2 sm:m-4'>
++                                    <span>No Jobs Found</span>
++                                    {
++                                        hasActiveFilters(filters) &&
++                                        <Button variant='outline' size='sm' className='cursor-pointer' onClick={clearFilters}>Clear filters</Button>
++                                    }
++                                </div>
++                            ) :
++                                <div className='h-[calc(100vh-5rem)] overflow-y-auto pb-5'>
+                                     <div className='max-sm: grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:m-4'>
+                                         {
+                                             filterJobs.map((job) => (
+diff -ruN old/Client/src/components/services/PromoOffer.jsx new/Client/src/components/services/PromoOffer.jsx
+--- old/Client/src/components/services/PromoOffer.jsx	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/components/services/PromoOffer.jsx	1970-01-01 00:00:00.000000000 +0000
+@@ -1,16 +0,0 @@
+-import React from 'react'
+-import { promoOffer } from '@/data/services'
+-
+-const PromoOffer = () => (
+-    <div className='mt-5'>
+-        <h4 className='flex items-start gap-0.5 font-semibold'>
+-            Promotional Offer
+-            <span className='mt-0.5 size-2 rounded-full bg-[#F83002]' aria-hidden='true' />
+-        </h4>
+-        <p className='mt-1 text-sm text-gray-600 dark:text-gray-300'>
+-            <span className='font-bold text-foreground'>{promoOffer.code}</span> {promoOffer.text}
+-        </p>
+-    </div>
+-)
+-
+-export default PromoOffer
+diff -ruN old/Client/src/components/services/ServicesMenu.jsx new/Client/src/components/services/ServicesMenu.jsx
+--- old/Client/src/components/services/ServicesMenu.jsx	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/components/services/ServicesMenu.jsx	2026-11-13 20:55:42.000000000 +0000
+@@ -3,7 +3,6 @@
+ import { ArrowRight, ChevronDown } from 'lucide-react'
+ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+ import ServiceList from './ServiceList'
+-import PromoOffer from './PromoOffer'
+ import { serviceGroups } from '@/data/services'
+ import { cn } from '@/lib/utils'
+ 
+@@ -27,7 +26,6 @@
+                             <div key={group.title} className={cn('p-6', index > 0 && 'border-l border-border')}>
+                                 <h3 className='mb-3 text-base font-semibold'>{group.title}</h3>
+                                 <ServiceList items={group.items} onNavigate={close} />
+-                                {index === serviceGroups.length - 1 && <PromoOffer />}
+                             </div>
+                         ))
+                     }
+diff -ruN old/Client/src/components/services/ServicesSection.jsx new/Client/src/components/services/ServicesSection.jsx
+--- old/Client/src/components/services/ServicesSection.jsx	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/components/services/ServicesSection.jsx	2026-11-13 20:55:42.000000000 +0000
+@@ -3,7 +3,6 @@
+ import { motion as Motion } from 'framer-motion'
+ import { ArrowRight, Crown, FileText, Gift, Sparkles } from 'lucide-react'
+ import ServiceList, { AvailableBadge } from './ServiceList'
+-import PromoOffer from './PromoOffer'
+ import { serviceGroups } from '@/data/services'
+ 
+ const groupIcons = [Sparkles, Crown, Gift]
+@@ -73,7 +72,6 @@
+                                     <h2 className='text-lg font-semibold'>{group.title}</h2>
+                                 </div>
+                                 <ServiceList items={group.items} showDetails />
+-                                {index === serviceGroups.length - 1 && <PromoOffer />}
+                             </div>
+                         )
+                     })
+diff -ruN old/Client/src/components/shared/Footer.jsx new/Client/src/components/shared/Footer.jsx
+--- old/Client/src/components/shared/Footer.jsx	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/components/shared/Footer.jsx	2026-11-13 20:55:23.000000000 +0000
+@@ -1,9 +1,9 @@
+ import React from 'react';
+ import { Link } from 'react-router-dom';
+-import { Flame } from 'lucide-react';
+ import { footerColumns } from '@/data/infoPages';
+ import { SITE_NAME, SOCIAL_LINKS } from '@/data/siteConfig';
+ import { AvailableBadge } from '../services/ServiceList';
++import Logo from './Logo';
+ 
+ const socialIcons = [
+     {
+@@ -38,11 +38,8 @@
+ 
+                     {/* brand + social */}
+                     <div>
+-                        <Link to="/" onClick={scrollTop} className="inline-flex items-center gap-2">
+-                            <span className="flex size-10 items-center justify-center rounded-full bg-[#6A38C2] text-white">
+-                                <Flame className="size-5" />
+-                            </span>
+-                            <h2 className="text-2xl font-bold">Hire The <span className="text-[#F83002] dark:text-[#ff6a3d]">Fire</span></h2>
++                        <Link to="/" onClick={scrollTop} className="inline-flex items-center gap-2" aria-label={`${SITE_NAME} home`}>
++                            <Logo size="lg" />
+                         </Link>
+                         <p className="mt-3 max-w-xs text-sm text-gray-600 dark:text-gray-400">
+                             Search, apply and get your dream job. Free resume samples and career services in one place.
+diff -ruN old/Client/src/components/shared/Logo.jsx new/Client/src/components/shared/Logo.jsx
+--- old/Client/src/components/shared/Logo.jsx	1970-01-01 00:00:00.000000000 +0000
++++ new/Client/src/components/shared/Logo.jsx	2026-11-13 20:55:06.000000000 +0000
+@@ -0,0 +1,70 @@
++import React, { useState } from 'react'
++import { Flame } from 'lucide-react'
++import { cn } from '@/lib/utils'
++import { LOGO_SRC, SHOW_NAME_NEXT_TO_LOGO, SITE_NAME, SITE_SHORT_NAME } from '@/data/siteConfig'
++
++// "Talent on Fire" -> "Talent on " + "Fire" (last word in the accent colour)
++const splitLastWord = (name) => {
++    const at = name.lastIndexOf(' ')
++    return at === -1 ? ['', name] : [name.slice(0, at + 1), name.slice(at + 1)]
++}
++
++// "TF" -> "T" + "F"
++const splitLastChar = (name) => [name.slice(0, -1), name.slice(-1)]
++
++const sizes = {
++    md: { img: 'h-8 max-w-[140px]', icon: 'size-8', flame: 'size-4', text: 'text-2xl' },
++    lg: { img: 'h-10 max-w-[180px]', icon: 'size-10', flame: 'size-5', text: 'text-2xl' },
++}
++
++// Brand logo + name used in the Navbar and Footer.
++// Uses public/logo.png (see LOGO_SRC in data/siteConfig.js); falls back to a flame icon if it can't load.
++// compactOnMobile: on phones (< 640px) show the short name "TF" instead of the full name.
++const Logo = ({ size = 'md', compactOnMobile = false, className }) => {
++    const [imageFailed, setImageFailed] = useState(false)
++    const s = sizes[size] || sizes.md
++    const accent = 'text-[#F83002] dark:text-[#ff6a3d]'
++
++    const [fullStart, fullEnd] = splitLastWord(SITE_NAME)
++    const [shortStart, shortEnd] = splitLastChar(SITE_SHORT_NAME)
++
++    return (
++        <span className={cn('inline-flex items-center gap-2', className)}>
++            {
++                imageFailed
++                    ? (
++                        <span className={cn('flex shrink-0 items-center justify-center rounded-full bg-[#6A38C2] text-white', s.icon)} aria-hidden='true'>
++                            <Flame className={s.flame} />
++                        </span>
++                    )
++                    : (
++                        <img
++                            src={LOGO_SRC}
++                            alt={`${SITE_NAME} logo`}
++                            onError={() => setImageFailed(true)}
++                            className={cn('w-auto shrink-0 object-contain', s.img)}
++                        />
++                    )
++            }
++
++            {
++                (SHOW_NAME_NEXT_TO_LOGO || imageFailed) && (
++                    <span className={cn('font-bold whitespace-nowrap leading-none', s.text, compactOnMobile && 'max-sm:text-xl')}>
++                        <span className={cn(compactOnMobile && 'max-sm:hidden')}>
++                            {fullStart}<span className={accent}>{fullEnd}</span>
++                        </span>
++                        {
++                            compactOnMobile && (
++                                <span className='sm:hidden' title={SITE_NAME}>
++                                    {shortStart}<span className={accent}>{shortEnd}</span>
++                                </span>
++                            )
++                        }
++                    </span>
++                )
++            }
++        </span>
++    )
++}
++
++export default Logo
+diff -ruN old/Client/src/components/shared/Navbar.jsx new/Client/src/components/shared/Navbar.jsx
+--- old/Client/src/components/shared/Navbar.jsx	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/components/shared/Navbar.jsx	2026-11-13 20:55:15.000000000 +0000
+@@ -1,4 +1,4 @@
+-import React, { useState } from 'react'
++import React, { useEffect, useState } from 'react'
+ import { Link, useNavigate } from 'react-router-dom'
+ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+ import { Button } from '../ui/button'
+@@ -13,6 +13,7 @@
+ import { motion } from "framer-motion"
+ import ThemeToggle from './ThemeToggle'
+ import ServicesMenu from '../services/ServicesMenu'
++import Logo from './Logo'
+ 
+ const Navbar = () => {
+     const dispatch = useDispatch();
+@@ -20,6 +21,15 @@
+ 
+     const { user } = useSelector(store => store.auth);
+ 
++    // the navbar stays fixed at the top while scrolling; add a shadow once the page has scrolled
++    const [scrolled, setScrolled] = useState(false);
++    useEffect(() => {
++        const onScroll = () => setScrolled(window.scrollY > 4);
++        onScroll();
++        window.addEventListener('scroll', onScroll, { passive: true });
++        return () => window.removeEventListener('scroll', onScroll);
++    }, []);
++
+ 
+     const logoutHandler = async () => {
+         try {
+@@ -45,10 +55,10 @@
+ 
+ 
+     return (
+-        <div className='bg-white dark:bg-transparent dark:border-b dark:border-white/10 overflow-hidden'>
++        <header className={`sticky top-0 z-40 border-b transition-shadow duration-300 bg-white/90 backdrop-blur-md dark:bg-background/80 dark:border-white/10 ${scrolled ? 'border-gray-200 shadow-sm dark:shadow-black/40' : 'border-transparent'}`}>
+             <div className='flex items-center justify-between mx-auto h-16 max-sm:px-3 sm:px-[5%] lg:px-[10%]'>
+-                <div onClick={() => navigate("/")} className='cursor-pointer'>
+-                    <h1 className='max-sm:text-lg text-2xl font-bold'>Hire The  <span className='text-[#F83002]'>Fire</span> </h1>
++                <div onClick={() => navigate("/")} className='cursor-pointer' role='link' aria-label='Go to home page'>
++                    <Logo compactOnMobile />
+                 </div>
+                 <div className='flex items-center gap-12 max-sm:gap-5'>
+                     <ul className='flex font-medium items-center gap-5 max-sm:hidden'>
+@@ -219,7 +229,7 @@
+ 
+                 </div >
+             </div >
+-        </div >
++        </header>
+ 
+     )
+ }
+diff -ruN old/Client/src/components/ui/carousel.jsx new/Client/src/components/ui/carousel.jsx
+--- old/Client/src/components/ui/carousel.jsx	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/components/ui/carousel.jsx	2026-11-13 20:56:33.000000000 +0000
+@@ -101,14 +101,21 @@
+ 
+ function CarouselContent({
+   className,
++  fade = false,
+   ...props
+ }) {
+-  const { carouselRef, orientation } = useCarousel()
++  const { carouselRef, orientation, canScrollPrev, canScrollNext } = useCarousel()
++
++  // optional: fade out the edge(s) that still have more slides behind them
++  const fadeMask = fade && orientation === "horizontal"
++    ? `linear-gradient(to right, ${canScrollPrev ? "transparent" : "#000"}, #000 32px, #000 calc(100% - 32px), ${canScrollNext ? "transparent" : "#000"})`
++    : undefined
+ 
+   return (
+     <div
+       ref={carouselRef}
+       className="overflow-hidden"
++      style={fadeMask ? { maskImage: fadeMask, WebkitMaskImage: fadeMask } : undefined}
+       data-slot="carousel-content">
+       <div
+         className={cn(
+diff -ruN old/Client/src/context/themeContext.js new/Client/src/context/themeContext.js
+--- old/Client/src/context/themeContext.js	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/context/themeContext.js	2026-11-13 20:55:31.000000000 +0000
+@@ -1,7 +1,7 @@
+ import { createContext } from 'react'
+ 
+ // localStorage key used by ThemeProvider and by the inline script in index.html (keep both the same)
+-export const THEME_STORAGE_KEY = 'hire-the-fire-theme'
++export const THEME_STORAGE_KEY = 'talent-on-fire-theme'
+ 
+ // default theme for first-time visitors
+ export const DEFAULT_THEME = 'dark'
+diff -ruN old/Client/src/data/infoPages.js new/Client/src/data/infoPages.js
+--- old/Client/src/data/infoPages.js	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/data/infoPages.js	2026-11-13 20:55:35.000000000 +0000
+@@ -1,3 +1,5 @@
++import { SITE_NAME } from './siteConfig'
++
+ // ------------------------------------------------------------------
+ // Content for the footer pages (/page/<slug>).
+ // Edit the text freely. Each page = title + intro + sections.
+@@ -6,7 +8,7 @@
+ export const infoPages = {
+     'about-us': {
+         title: 'About us',
+-        intro: 'Hire The Fire is a job portal that connects job seekers with recruiters, quickly and simply.',
++        intro: `${SITE_NAME} is a job portal that connects job seekers with recruiters, quickly and simply.`,
+         sections: [
+             {
+                 heading: 'What we do',
+@@ -38,7 +40,7 @@
+     },
+     'employer-home': {
+         title: 'Employer home',
+-        intro: 'Hire faster with Hire The Fire. Post jobs, manage your companies and review applicants in one place.',
++        intro: `Hire faster with ${SITE_NAME}. Post jobs, manage your companies and review applicants in one place.`,
+         sections: [
+             {
+                 heading: 'How it works',
+@@ -54,13 +56,13 @@
+     },
+     sitemap: {
+         title: 'Sitemap',
+-        intro: 'All the main pages of Hire The Fire in one place.',
++        intro: `All the main pages of ${SITE_NAME} in one place.`,
+         sections: [],
+         sitemap: true,
+     },
+     credits: {
+         title: 'Credits',
+-        intro: 'Hire The Fire is built with these open-source tools and services. Thank you to their authors.',
++        intro: `${SITE_NAME} is built with these open-source tools and services. Thank you to their authors.`,
+         sections: [
+             {
+                 heading: 'Frontend',
+@@ -100,7 +102,7 @@
+     },
+     'summons-notices': {
+         title: 'Summons / Notices',
+-        intro: 'How to send legal notices, summons or other official communication to Hire The Fire.',
++        intro: `How to send legal notices, summons or other official communication to ${SITE_NAME}.`,
+         sections: [
+             {
+                 heading: 'Sending a notice',
+@@ -142,7 +144,7 @@
+     },
+     'privacy-policy': {
+         title: 'Privacy policy',
+-        intro: 'This page explains what information Hire The Fire collects and how it is used.',
++        intro: `This page explains what information ${SITE_NAME} collects and how it is used.`,
+         sections: [
+             {
+                 heading: 'Information we collect',
+@@ -168,7 +170,7 @@
+     },
+     'terms-and-conditions': {
+         title: 'Terms & conditions',
+-        intro: 'By using Hire The Fire you agree to these terms.',
++        intro: `By using ${SITE_NAME} you agree to these terms.`,
+         sections: [
+             {
+                 heading: 'Using the platform',
+@@ -186,7 +188,7 @@
+             {
+                 heading: 'Liability',
+                 body: [
+-                    'Hire The Fire connects job seekers and recruiters but is not a party to any job offer or employment contract.',
++                    `${SITE_NAME} connects job seekers and recruiters but is not a party to any job offer or employment contract.`,
+                 ],
+             },
+         ],
+@@ -198,7 +200,7 @@
+             {
+                 heading: 'We never ask for money',
+                 body: [
+-                    'Hire The Fire and genuine recruiters will never ask you to pay for a job, interview, training or "registration".',
++                    `${SITE_NAME} and genuine recruiters will never ask you to pay for a job, interview, training or "registration".`,
+                     'Never share OTPs, passwords or bank details with anyone claiming to offer a job.',
+                 ],
+             },
+@@ -213,7 +215,7 @@
+     },
+     'trust-and-safety': {
+         title: 'Trust & safety',
+-        intro: 'How we keep Hire The Fire safe for job seekers and recruiters.',
++        intro: `How we keep ${SITE_NAME} safe for job seekers and recruiters.`,
+         sections: [
+             {
+                 heading: 'What we do',
+diff -ruN old/Client/src/data/services.js new/Client/src/data/services.js
+--- old/Client/src/data/services.js	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/data/services.js	2026-11-13 20:55:42.000000000 +0000
+@@ -10,7 +10,7 @@
+     {
+         title: 'AI career tools',
+         items: [
+-            { label: 'Fire AI job agent', description: 'An AI agent that finds and shortlists jobs for you.' },
++            { label: 'TF AI job agent', description: 'An AI agent that finds and shortlists jobs for you.' },
+             { label: 'Resume score checker', description: 'Get an instant score and fixes for your resume.' },
+             { label: 'AI resume maker', description: 'Build an ATS-friendly resume in minutes.' },
+             { label: 'Interview Q&A', description: 'Common questions with model answers by role.' },
+@@ -21,7 +21,7 @@
+     {
+         title: 'Premium services',
+         items: [
+-            { label: 'Fire Pro', tag: 'Most popular', tagTone: 'green', description: 'Priority visibility to recruiters and more.' },
++            { label: 'TF Pro', tag: 'Most popular', tagTone: 'green', description: 'Priority visibility to recruiters and more.' },
+             { label: 'Expert resume writing', description: 'Get your resume written by experts.' },
+             { label: 'Expert power profile', description: 'A profile crafted to stand out to recruiters.' },
+             { label: 'AI Bootcamps', tag: 'New', tagTone: 'neutral', description: 'Short, hands-on AI courses for job seekers.' },
+@@ -40,8 +40,3 @@
+         ],
+     },
+ ]
+-
+-export const promoOffer = {
+-    code: 'PROSALE',
+-    text: 'Flat 25% off on Fire 360 Pro. Limited Period Offer.',
+-}
+diff -ruN old/Client/src/data/siteConfig.js new/Client/src/data/siteConfig.js
+--- old/Client/src/data/siteConfig.js	2026-11-07 19:50:24.000000000 +0000
++++ new/Client/src/data/siteConfig.js	2026-11-13 20:54:53.000000000 +0000
+@@ -1,9 +1,23 @@
+ // ------------------------------------------------------------------
+-// Site-wide settings used by the Footer and the info pages.
++// Site-wide settings used by the Navbar, Footer, info pages and logo.
+ // Edit these values before deploying.
+ // ------------------------------------------------------------------
+ 
+-export const SITE_NAME = 'Hire The Fire'
++// Brand name. Change it here and it updates everywhere in the app
++// (navbar, footer, info pages, resume samples). index.html <title> is set separately.
++export const SITE_NAME = 'Talent on Fire'
++
++// Short name, shown in the navbar on small phones where the full name doesn't fit
++export const SITE_SHORT_NAME = 'TF'
++
++// Logo image. Put your file at Client/public/logo.png (same name) and it is used
++// in the navbar, the footer and as the browser-tab icon. If the file is missing
++// or fails to load, a flame icon is shown instead, so nothing breaks.
++export const LOGO_SRC = '/logo.png'
++
++// If your logo PNG already contains the words "Talent on Fire", set this to false
++// so the name isn't shown twice next to it.
++export const SHOW_NAME_NEXT_TO_LOGO = true
+ 
+ // Support email shown on Help center / Report issue / Grievances pages.
+ // Leave empty ('') to hide email and point people to LinkedIn instead.
+diff -ruN old/Client/src/index.css new/Client/src/index.css
+--- old/Client/src/index.css	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/index.css	2026-11-13 20:55:47.000000000 +0000
+@@ -120,6 +120,10 @@
+     @apply bg-background text-foreground;
+     transition: background-color 0.3s ease, color 0.3s ease;
+   }
++  /* the navbar is sticky (4rem tall): keep in-page jumps (#services etc.) from hiding under it */
++  html {
++    scroll-padding-top: 5rem;
++  }
+ }
+ 
+ /* soft violet glow at the top of every page in dark mode */
+diff -ruN old/Client/src/utils/jobFilters.js new/Client/src/utils/jobFilters.js
+--- old/Client/src/utils/jobFilters.js	1970-01-01 00:00:00.000000000 +0000
++++ new/Client/src/utils/jobFilters.js	2026-11-13 20:55:59.000000000 +0000
+@@ -0,0 +1,82 @@
++// ------------------------------------------------------------------
++// Filters shown on the Jobs page (left sidebar / "Filter" button on mobile).
++//
++// Each group has its own "All" option, so you can combine filters,
++// e.g. Location = Bengaluru + Salary = 7-10 LPA + Industry = All.
++// To add an option, just add a string to the group's `options` array.
++// ------------------------------------------------------------------
++
++export const ALL = 'All'
++
++export const filterGroups = [
++    {
++        key: 'location',
++        title: 'Location',
++        options: ['Delhi NCR', 'Bengaluru', 'Mumbai', 'Hyderabad', 'Ranchi', 'Siwan'],
++    },
++    {
++        key: 'salary',
++        title: 'Salary',
++        options: ['2-6 LPA', '7-10 LPA', '11-40 LPA', '41-100 LPA', '100+'],
++    },
++    {
++        key: 'industry',
++        title: 'Industry',
++        options: [
++            'Frontend Developer', 'Backend Developer', 'Full Stack Developer', 'Data Scientist', 'Machine Learning',
++            'DevOps Engineer', 'Mobile App Developer', 'UI/UX Designer', 'Product Manager', 'Quality Assurance Engineer',
++            'Cybersecurity Analyst', 'Cloud Engineer', 'Business Analyst', 'Database Administrator', 'Network Engineer',
++            'Game Developer', 'Embedded Systems Engineer', 'Robotics Engineer', 'Blockchain Developer', 'AI Researcher',
++        ],
++    },
++]
++
++// every group starts on "All"
++export const DEFAULT_FILTERS = Object.fromEntries(filterGroups.map((group) => [group.key, ALL]))
++
++export const hasActiveFilters = (filters) => Object.values(filters).some((value) => value !== ALL)
++
++// other spellings recruiters use for the same city
++const LOCATION_ALIASES = {
++    'Delhi NCR': ['delhi', 'ncr', 'noida', 'gurugram', 'gurgaon', 'ghaziabad', 'faridabad'],
++    'Bengaluru': ['bengaluru', 'bangalore', 'bengluru'],
++    'Mumbai': ['mumbai', 'bombay', 'navi mumbai', 'thane'],
++}
++
++const lower = (value) => String(value ?? '').toLowerCase()
++
++const matchesLocation = (job, option) => {
++    const location = lower(job?.location)
++    const names = LOCATION_ALIASES[option] || [lower(option)]
++    return names.some((name) => location.includes(name))
++}
++
++// salary is stored in LPA. Filter values look like "6-10 LPA" or "100+"
++export const matchesSalary = (salary, option) => {
++    const value = Number(salary)
++    if (Number.isNaN(value)) return false
++    const range = option.match(/^(\d+)\s*-\s*(\d+)\s*LPA$/i)
++    if (range) return value >= Number(range[1]) && value <= Number(range[2])
++    const min = option.match(/^(\d+)\s*\+$/)
++    if (min) return value >= Number(min[1])
++    return false
++}
++
++const matchesIndustry = (job, option) => {
++    const term = lower(option)
++    return lower(job?.title).includes(term) || lower(job?.description).includes(term)
++}
++
++const matchers = {
++    location: matchesLocation,
++    salary: (job, option) => matchesSalary(job?.salary, option),
++    industry: matchesIndustry,
++}
++
++// keep only the jobs that match every selected (non-"All") filter
++export const applyJobFilters = (jobs = [], filters = DEFAULT_FILTERS) =>
++    jobs.filter((job) =>
++        Object.entries(filters).every(([key, value]) =>
++            value === ALL || !matchers[key] || matchers[key](job, value)
++        )
++    )
+diff -ruN old/Client/src/utils/resumeLinks.js new/Client/src/utils/resumeLinks.js
+--- old/Client/src/utils/resumeLinks.js	2026-10-29 23:45:07.000000000 +0000
++++ new/Client/src/utils/resumeLinks.js	2026-11-13 20:55:35.000000000 +0000
+@@ -1,3 +1,5 @@
++import { SITE_NAME } from '@/data/siteConfig'
++
+ // Turns any resume link (Google Drive, Cloudinary or a local /public file)
+ // into the 3 URLs the Resume Samples page needs.
+ //
+@@ -65,7 +67,7 @@
+ 
+     // local file in /public (e.g. /resumes/sample.pdf) or any other direct PDF link
+     return {
+-        source: url.startsWith('/') ? 'Hire The Fire' : 'Web',
++        source: url.startsWith('/') ? SITE_NAME : 'Web',
+         previewUrl: url,
+         openUrl: url,
+         downloadUrl: url,

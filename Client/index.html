@@ -2,14 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- browser-tab icon: put your logo at public/logo.png (see README "Adding your logo") -->
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hire The Fire</title>
+    <meta name="description" content="Talent on Fire (TF) - search, apply and get your dream job. Free resume samples and career services." />
+    <meta name="theme-color" content="#6A38C2" />
+    <title>Talent on Fire</title>
     <script>
       // apply saved theme before React loads (prevents a white flash). Key must match src/context/themeContext.js
       (function () {
         try {
-          var t = localStorage.getItem('hire-the-fire-theme');
+          var t = localStorage.getItem('talent-on-fire-theme');
           if (t !== 'light') {
             document.documentElement.classList.add('dark');
             document.documentElement.style.colorScheme = 'dark';

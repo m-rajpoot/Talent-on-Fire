@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Button } from '../ui/button'
@@ -13,12 +13,22 @@ import { setSearchedQuery } from '@/redux/jobSlice'
 import { motion } from "framer-motion"
 import ThemeToggle from './ThemeToggle'
 import ServicesMenu from '../services/ServicesMenu'
+import Logo from './Logo'
 
 const Navbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const { user } = useSelector(store => store.auth);
+
+    // the navbar stays fixed at the top while scrolling; add a shadow once the page has scrolled
+    const [scrolled, setScrolled] = useState(false);
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 4);
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
 
 
     const logoutHandler = async () => {
@@ -45,10 +55,10 @@ const Navbar = () => {
 
 
     return (
-        <div className='bg-white dark:bg-transparent dark:border-b dark:border-white/10 overflow-hidden'>
+        <header className={`sticky top-0 z-40 border-b transition-shadow duration-300 bg-white/90 backdrop-blur-md dark:bg-background/80 dark:border-white/10 ${scrolled ? 'border-gray-200 shadow-sm dark:shadow-black/40' : 'border-transparent'}`}>
             <div className='flex items-center justify-between mx-auto h-16 max-sm:px-3 sm:px-[5%] lg:px-[10%]'>
-                <div onClick={() => navigate("/")} className='cursor-pointer'>
-                    <h1 className='max-sm:text-lg text-2xl font-bold'>Hire The  <span className='text-[#F83002]'>Fire</span> </h1>
+                <div onClick={() => { navigate("/"); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className='cursor-pointer' role='link' aria-label='Go to home page'>
+                    <Logo compactOnMobile />
                 </div>
                 <div className='flex items-center gap-12 max-sm:gap-5'>
                     <ul className='flex font-medium items-center gap-5 max-sm:hidden'>
@@ -219,7 +229,7 @@ const Navbar = () => {
 
                 </div >
             </div >
-        </div >
+        </header>
 
     )
 }

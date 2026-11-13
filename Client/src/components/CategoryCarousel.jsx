@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './ui/carousel'
 import { Button } from './ui/button'
 import { useDispatch } from 'react-redux'
@@ -14,7 +14,7 @@ const category = [
     "Graphic Designer",
     "Full Stack Developer",
     "DevOps Engineer",
-    "Cyber Security ",
+    "Cyber Security",
 ]
 
 function CategoryCarousel() {
@@ -36,12 +36,16 @@ function CategoryCarousel() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{}}
         >
-            <Carousel className="w-full max-sm:max-w-[234px] sm:max-w-xl mx-auto my-10">
-                <CarouselContent>
+            {/* each pill is as wide as its text (basis-auto), so long names never overlap the next pill */}
+            <Carousel
+                opts={{ align: "start" }}
+                className="w-full max-sm:max-w-[calc(100%-7rem)] sm:max-w-xl md:max-w-2xl mx-auto my-10"
+            >
+                <CarouselContent fade className="py-1">
                     {
-                        category.map((cat, index) => (
-                            <CarouselItem key={index} className="basis-[60%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4 ">
-                                <Button onClick={() => searchJobHandler(cat)} variant="outline" className="rounded-full cursor-pointer hover:scale-105 duration-600 transition-all">
+                        category.map((cat) => (
+                            <CarouselItem key={cat} className="basis-auto">
+                                <Button onClick={() => searchJobHandler(cat.trim())} variant="outline" className="rounded-full whitespace-nowrap cursor-pointer hover:scale-105 duration-300 transition-all">
                                     {cat}
                                 </Button>
                             </CarouselItem>

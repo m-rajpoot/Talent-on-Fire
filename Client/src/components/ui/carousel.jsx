@@ -101,14 +101,21 @@ function Carousel({
 
 function CarouselContent({
   className,
+  fade = false,
   ...props
 }) {
-  const { carouselRef, orientation } = useCarousel()
+  const { carouselRef, orientation, canScrollPrev, canScrollNext } = useCarousel()
+
+  // optional: fade out the edge(s) that still have more slides behind them
+  const fadeMask = fade && orientation === "horizontal"
+    ? `linear-gradient(to right, ${canScrollPrev ? "transparent" : "#000"}, #000 32px, #000 calc(100% - 32px), ${canScrollNext ? "transparent" : "#000"})`
+    : undefined
 
   return (
     <div
       ref={carouselRef}
       className="overflow-hidden"
+      style={fadeMask ? { maskImage: fadeMask, WebkitMaskImage: fadeMask } : undefined}
       data-slot="carousel-content">
       <div
         className={cn(

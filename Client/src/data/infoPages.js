@@ -1,3 +1,5 @@
+import { SITE_NAME } from './siteConfig'
+
 // ------------------------------------------------------------------
 // Content for the footer pages (/page/<slug>).
 // Edit the text freely. Each page = title + intro + sections.
@@ -6,7 +8,7 @@
 export const infoPages = {
     'about-us': {
         title: 'About us',
-        intro: 'Hire The Fire is a job portal that connects job seekers with recruiters, quickly and simply.',
+        intro: `${SITE_NAME} is a job portal that connects job seekers with recruiters, quickly and simply.`,
         sections: [
             {
                 heading: 'What we do',
@@ -38,7 +40,7 @@ export const infoPages = {
     },
     'employer-home': {
         title: 'Employer home',
-        intro: 'Hire faster with Hire The Fire. Post jobs, manage your companies and review applicants in one place.',
+        intro: `Hire faster with ${SITE_NAME}. Post jobs, manage your companies and review applicants in one place.`,
         sections: [
             {
                 heading: 'How it works',
@@ -54,13 +56,13 @@ export const infoPages = {
     },
     sitemap: {
         title: 'Sitemap',
-        intro: 'All the main pages of Hire The Fire in one place.',
+        intro: `All the main pages of ${SITE_NAME} in one place.`,
         sections: [],
         sitemap: true,
     },
     credits: {
         title: 'Credits',
-        intro: 'Hire The Fire is built with these open-source tools and services. Thank you to their authors.',
+        intro: `${SITE_NAME} is built with these open-source tools and services. Thank you to their authors.`,
         sections: [
             {
                 heading: 'Frontend',
@@ -100,7 +102,7 @@ export const infoPages = {
     },
     'summons-notices': {
         title: 'Summons / Notices',
-        intro: 'How to send legal notices, summons or other official communication to Hire The Fire.',
+        intro: `How to send legal notices, summons or other official communication to ${SITE_NAME}.`,
         sections: [
             {
                 heading: 'Sending a notice',
@@ -142,7 +144,7 @@ export const infoPages = {
     },
     'privacy-policy': {
         title: 'Privacy policy',
-        intro: 'This page explains what information Hire The Fire collects and how it is used.',
+        intro: `This page explains what information ${SITE_NAME} collects and how it is used.`,
         sections: [
             {
                 heading: 'Information we collect',
@@ -168,7 +170,7 @@ export const infoPages = {
     },
     'terms-and-conditions': {
         title: 'Terms & conditions',
-        intro: 'By using Hire The Fire you agree to these terms.',
+        intro: `By using ${SITE_NAME} you agree to these terms.`,
         sections: [
             {
                 heading: 'Using the platform',
@@ -186,7 +188,7 @@ export const infoPages = {
             {
                 heading: 'Liability',
                 body: [
-                    'Hire The Fire connects job seekers and recruiters but is not a party to any job offer or employment contract.',
+                    `${SITE_NAME} connects job seekers and recruiters but is not a party to any job offer or employment contract.`,
                 ],
             },
         ],
@@ -198,7 +200,7 @@ export const infoPages = {
             {
                 heading: 'We never ask for money',
                 body: [
-                    'Hire The Fire and genuine recruiters will never ask you to pay for a job, interview, training or "registration".',
+                    `${SITE_NAME} and genuine recruiters will never ask you to pay for a job, interview, training or "registration".`,
                     'Never share OTPs, passwords or bank details with anyone claiming to offer a job.',
                 ],
             },
@@ -213,7 +215,7 @@ export const infoPages = {
     },
     'trust-and-safety': {
         title: 'Trust & safety',
-        intro: 'How we keep Hire The Fire safe for job seekers and recruiters.',
+        intro: `How we keep ${SITE_NAME} safe for job seekers and recruiters.`,
         sections: [
             {
                 heading: 'What we do',

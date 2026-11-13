@@ -120,6 +120,10 @@
     @apply bg-background text-foreground;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
+  /* the navbar is sticky (4rem tall): keep in-page jumps (#services etc.) from hiding under it */
+  html {
+    scroll-padding-top: 5rem;
+  }
 }
 
 /* soft violet glow at the top of every page in dark mode */

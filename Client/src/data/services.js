@@ -10,7 +10,7 @@ export const serviceGroups = [
     {
         title: 'AI career tools',
         items: [
-            { label: 'Fire AI job agent', description: 'An AI agent that finds and shortlists jobs for you.' },
+            { label: 'TF AI job agent', description: 'An AI agent that finds and shortlists jobs for you.' },
             { label: 'Resume score checker', description: 'Get an instant score and fixes for your resume.' },
             { label: 'AI resume maker', description: 'Build an ATS-friendly resume in minutes.' },
             { label: 'Interview Q&A', description: 'Common questions with model answers by role.' },
@@ -21,7 +21,7 @@ export const serviceGroups = [
     {
         title: 'Premium services',
         items: [
-            { label: 'Fire Pro', tag: 'Most popular', tagTone: 'green', description: 'Priority visibility to recruiters and more.' },
+            { label: 'TF Pro', tag: 'Most popular', tagTone: 'green', description: 'Priority visibility to recruiters and more.' },
             { label: 'Expert resume writing', description: 'Get your resume written by experts.' },
             { label: 'Expert power profile', description: 'A profile crafted to stand out to recruiters.' },
             { label: 'AI Bootcamps', tag: 'New', tagTone: 'neutral', description: 'Short, hands-on AI courses for job seekers.' },
@@ -40,8 +40,3 @@ export const serviceGroups = [
         ],
     },
 ]
-
-export const promoOffer = {
-    code: 'PROSALE',
-    text: 'Flat 25% off on Fire 360 Pro. Limited Period Offer.',
-}

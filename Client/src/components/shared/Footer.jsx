@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Flame } from 'lucide-react';
 import { footerColumns } from '@/data/infoPages';
 import { SITE_NAME, SOCIAL_LINKS } from '@/data/siteConfig';
 import { AvailableBadge } from '../services/ServiceList';
+import Logo from './Logo';
 
 const socialIcons = [
     {
@@ -38,11 +38,8 @@ const Footer = () => {
 
                     {/* brand + social */}
                     <div>
-                        <Link to="/" onClick={scrollTop} className="inline-flex items-center gap-2">
-                            <span className="flex size-10 items-center justify-center rounded-full bg-[#6A38C2] text-white">
-                                <Flame className="size-5" />
-                            </span>
-                            <h2 className="text-2xl font-bold">Hire The <span className="text-[#F83002] dark:text-[#ff6a3d]">Fire</span></h2>
+                        <Link to="/" onClick={scrollTop} className="inline-flex items-center gap-2" aria-label={`${SITE_NAME} home`}>
+                            <Logo size="lg" />
                         </Link>
                         <p className="mt-3 max-w-xs text-sm text-gray-600 dark:text-gray-400">
                             Search, apply and get your dream job. Free resume samples and career services in one place.

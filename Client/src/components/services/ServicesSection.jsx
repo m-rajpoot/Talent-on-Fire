@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import { motion as Motion } from 'framer-motion'
 import { ArrowRight, Crown, FileText, Gift, Sparkles } from 'lucide-react'
 import ServiceList, { AvailableBadge } from './ServiceList'
-import PromoOffer from './PromoOffer'
 import { serviceGroups } from '@/data/services'
 
 const groupIcons = [Sparkles, Crown, Gift]
@@ -73,7 +72,6 @@ const ServicesSection = () => {
                                     <h2 className='text-lg font-semibold'>{group.title}</h2>
                                 </div>
                                 <ServiceList items={group.items} showDetails />
-                                {index === serviceGroups.length - 1 && <PromoOffer />}
                             </div>
                         )
                     })
