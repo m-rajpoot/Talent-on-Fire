@@ -408,14 +408,12 @@ All changes are listed in **[CHANGES.md](./CHANGES.md)**. Latest update (Nov 202
 
 ## 👨‍💻 Author & credits
 
-- **Suryansh Sharma** — GitHub [@lecrupus](https://github.com/lecrupus)
+- **Mohit Kumar Singh** — GitHub [@m-rajpoot](https://github.com/m-rajpoot)
 - Original job-portal base by Mohit ([LinkedIn](https://www.linkedin.com/in/m-rajput/)).
 - Built with open-source tools listed on the in-app **Credits** page (`/page/credits`).
 
 ## 📄 License
-
 Open-source under the **MIT License**.
 
 ## 🙌 Contributions
-
 Fork the repo, open an issue or send a pull request — suggestions are welcome.

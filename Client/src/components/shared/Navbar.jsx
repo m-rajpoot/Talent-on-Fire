@@ -55,7 +55,7 @@ const Navbar = () => {
 
 
     return (
-        <header className={`sticky top-0 z-40 border-b transition-shadow duration-300 bg-white/90 backdrop-blur-md dark:bg-background/80 dark:border-white/10 ${scrolled ? 'border-gray-200 shadow-sm dark:shadow-black/40' : 'border-transparent'}`}>
+        <header className= {`sticky top-0 z-40 border-b transition-shadow duration-300 bg-white/90 backdrop-blur-md dark:bg-background/80 dark:border-white/10 ${scrolled ? 'border-gray-200 shadow-sm dark:shadow-black/40' : 'border-transparent'}`}>
             <div className='flex items-center justify-between mx-auto h-16 max-sm:px-3 sm:px-[5%] lg:px-[10%]'>
                 <div onClick={() => { navigate("/"); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className='cursor-pointer' role='link' aria-label='Go to home page'>
                     <Logo compactOnMobile />
